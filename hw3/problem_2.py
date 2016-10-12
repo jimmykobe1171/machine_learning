@@ -167,14 +167,14 @@ def test_perceptron(training_corpus, training_labels, test_corpus, test_labels):
     
 
     # tfidf 0.133065
-    # tfidf_training_feature = generate_tfidf_training_feature(unigram_training_feature)
+    tfidf_training_feature = generate_tfidf_training_feature(unigram_training_feature)
     # tfidf_test_feature = generate_tfidf_test_feature(unigram_training_feature, unigram_test_feature)
     # tfidf_perceptron = AveragedPerceptron(tfidf_training_feature, new_training_labels)
     # error_rate = tfidf_perceptron.classify(tfidf_test_feature, new_test_labels)
     # print 'error_rate: ', error_rate
     #  k-fold error rate: 
-    # error_rate = k_fold_training(tfidf_training_feature, new_training_labels)
-    # print 'error_rate: ', error_rate
+    error_rate = k_fold_training(tfidf_training_feature, new_training_labels)
+    print 'tfidf error_rate: ', error_rate
 
     # bigram
     # print 'generating bigram feature...'
@@ -196,7 +196,7 @@ def test_perceptron(training_corpus, training_labels, test_corpus, test_labels):
     # print 'error_rate: ', error_rate
     #  k-fold error rate: 
     error_rate = k_fold_training(tfidf_variant_training_feature, new_training_labels)
-    print 'error_rate: ', error_rate
+    print 'tfidf variant error_rate: ', error_rate
 
 def test_naive_bayes():
     # unigram
@@ -214,13 +214,14 @@ def test_naive_bayes():
     # test_error_rate = classifier.classify(test_data, test_labels)
     # print 'training_error_rate: ', training_error_rate
     # print 'test_error_rate: ', test_error_rate
+    pass
     
 
 
 def main():
     start = datetime.now()
 
-    using_num = 2000
+    using_num = 200000
     # read training data
     training_data = read_training_data()
     training_corpus = training_data['text'][:using_num]
@@ -233,7 +234,7 @@ def main():
     #---------------------- perceptron ----------------------#
     test_perceptron(training_corpus, training_labels, test_corpus, test_labels)
     #---------------------- naive bayes ----------------------#
-    test_naive_bayes()
+    # test_naive_bayes()
     
     end = datetime.now()
     used_time = (end - start).seconds
