@@ -64,12 +64,12 @@ def generate_tfidf_variant_test_feature(unigram_training_feature, unigram_test_f
     tfidf_matrix = new_unigram_test_feature * diag
     return tfidf_matrix
 
-
 def generate_random_indexes(number):
     # randomize
     indexes = [i for i in range(number)]
     shuffle(indexes)
     return indexes
+
 
 class AveragedPerceptron(object):
     def __init__(self, training_data, training_labels):
@@ -116,7 +116,7 @@ class AveragedPerceptron(object):
         # last classifier
         w_sum += c*w
         b_sum += c*b
-        # print w_sum, b_sum
+        print w_sum, b_sum
         return w_sum, b_sum
 
     def classify(self, test_data, test_labels):
@@ -163,37 +163,23 @@ def k_fold_naive_bayes_training(training_feature, training_labels, labels):
 
     return sum_error_rate / 5
 
-
 def test_perceptron(training_corpus, training_labels, test_corpus, test_labels):
-    # unigram_training_feature, vectorizer = generate_unigram_feature(training_corpus)
+    unigram_training_feature, vectorizer = generate_unigram_feature(training_corpus)
     # unigram k-fold error rate: 0.113415
-    # unigram_test_feature = vectorizer.transform(test_corpus)
-    # unigram_perceptron = AveragedPerceptron(unigram_training_feature, training_labels)
-    # error_rate = unigram_perceptron.classify(unigram_test_feature, new_test_labels)
-    # error_rate = k_fold_perceptron_training(unigram_training_feature, training_labels)
-    # print 'error_rate: ', error_rate
-
+    error_rate = k_fold_perceptron_training(unigram_training_feature, training_labels)
+    print 'error_rate: ', error_rate
     # tfidf k-fold error rate: 0.125445
-    # tfidf_training_feature = generate_tfidf_training_feature(unigram_training_feature)
-    # error_rate = k_fold_perceptron_training(tfidf_training_feature, training_labels)
-    # print 'tfidf error_rate: ', error_rate
-
-    # bigram
-    print 'generating bigram feature...'
+    tfidf_training_feature = generate_tfidf_training_feature(unigram_training_feature)
+    error_rate = k_fold_perceptron_training(tfidf_training_feature, training_labels)
+    print 'tfidf error_rate: ', error_rate
+    # bigram k-fold error rate: 
     bigram_training_feature, vectorizer = generate_bigram_feature(training_corpus)
-    # bigram_test_feature = vectorizer.transform(test_corpus)
-    # print 'building bigram perceptron...'
-    # bigram_perceptron = AveragedPerceptron(bigram_training_feature, training_labels)
-    # error_rate = bigram_perceptron.classify(bigram_test_feature, new_test_labels)
-    # print 'error_rate: ', error_rate
-    #  k-fold error rate: 
     error_rate = k_fold_perceptron_training(bigram_training_feature, training_labels)
     print 'bigram error_rate: ', error_rate
-    
     # tfidf variant k-fold error rate: 0.12583
-    # tfidf_variant_training_feature = generate_tfidf_variant_training_feature(unigram_training_feature)
-    # error_rate = k_fold_perceptron_training(tfidf_variant_training_feature, training_labels)
-    # print 'tfidf variant error_rate: ', error_rate
+    tfidf_variant_training_feature = generate_tfidf_variant_training_feature(unigram_training_feature)
+    error_rate = k_fold_perceptron_training(tfidf_variant_training_feature, training_labels)
+    print 'tfidf variant error_rate: ', error_rate
 
 def test_naive_bayes(training_corpus, training_labels):
     unigram_training_feature, vectorizer = generate_unigram_feature(training_corpus)
@@ -230,7 +216,16 @@ def main():
     #---------------------- perceptron ----------------------#
     test_perceptron(training_corpus, new_training_labels, test_corpus, new_test_labels)
     #---------------------- naive bayes ----------------------#
-    # test_naive_bayes(training_corpus, new_training_labels)
+    test_naive_bayes(training_corpus, new_training_labels)
+    
+    # unigram with perceptron final training and testing
+    unigram_training_feature, vectorizer = generate_unigram_feature(training_corpus)
+    unigram_test_feature = vectorizer.transform(test_corpus)
+    unigram_perceptron = AveragedPerceptron(unigram_training_feature, new_training_labels)
+    training_error_rate = unigram_perceptron.classify(unigram_training_feature, new_training_labels)
+    test_error_rate = unigram_perceptron.classify(unigram_test_feature, new_test_labels)
+    print 'unigram_training_error_rate: ', training_error_rate
+    print 'unigram_test_error_rate: ', test_error_rate
     
     end = datetime.now()
     used_time = (end - start).seconds
