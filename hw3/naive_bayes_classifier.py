@@ -1,4 +1,6 @@
 import numpy as np
+from scipy import sparse
+
 
 class NaiveBayesClassifier(object):
     def __init__(self, training_data, training_labels, labels):
@@ -29,9 +31,13 @@ class NaiveBayesClassifier(object):
         classify test data using the trained model,
         return error_rate.
         """
+        new_data = 1-test_data.data
+        new_test_data = sparse.csr_matrix(test_data)
+        new_test_data.data = new_data
+
         pis_matrix = np.tile(self.pis, (test_data.shape[0], 1))
         result_matrix = np.log(pis_matrix) + test_data * np.log(self.mus.transpose()) + \
-                        (np.ones(test_data.shape)-test_data) * np.log(np.ones(self.mus.transpose().shape)-self.mus.transpose())
+                        new_test_data * np.log(np.ones(self.mus.transpose().shape)-self.mus.transpose())
         max_indexes = np.argmax(result_matrix, axis=1)
         classified_labels = self.labels[np.array(max_indexes).flatten()]
         error_num = (classified_labels - np.array(test_labels).flatten()).nonzero()[0].shape[0]
