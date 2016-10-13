@@ -165,7 +165,7 @@ def k_fold_naive_bayes_training(training_feature, training_labels, labels):
 
 
 def test_perceptron(training_corpus, training_labels, test_corpus, test_labels):
-    unigram_training_feature, vectorizer = generate_unigram_feature(training_corpus)
+    # unigram_training_feature, vectorizer = generate_unigram_feature(training_corpus)
     # unigram k-fold error rate: 0.113415
     # unigram_test_feature = vectorizer.transform(test_corpus)
     # unigram_perceptron = AveragedPerceptron(unigram_training_feature, training_labels)
@@ -179,16 +179,16 @@ def test_perceptron(training_corpus, training_labels, test_corpus, test_labels):
     # print 'tfidf error_rate: ', error_rate
 
     # bigram
-    # print 'generating bigram feature...'
-    # bigram_training_feature, vectorizer = generate_bigram_feature(training_corpus)
+    print 'generating bigram feature...'
+    bigram_training_feature, vectorizer = generate_bigram_feature(training_corpus)
     # bigram_test_feature = vectorizer.transform(test_corpus)
     # print 'building bigram perceptron...'
     # bigram_perceptron = AveragedPerceptron(bigram_training_feature, training_labels)
     # error_rate = bigram_perceptron.classify(bigram_test_feature, new_test_labels)
     # print 'error_rate: ', error_rate
     #  k-fold error rate: 
-    # error_rate = k_fold_perceptron_training(bigram_training_feature, training_labels)
-    # print 'error_rate: ', error_rate
+    error_rate = k_fold_perceptron_training(bigram_training_feature, training_labels)
+    print 'error_rate: ', error_rate
     
     # tfidf variant k-fold error rate: 0.12583
     # tfidf_variant_training_feature = generate_tfidf_variant_training_feature(unigram_training_feature)
@@ -197,7 +197,7 @@ def test_perceptron(training_corpus, training_labels, test_corpus, test_labels):
 
 def test_naive_bayes(training_corpus, training_labels):
     unigram_training_feature, vectorizer = generate_unigram_feature(training_corpus)
-    # unigram
+    # unigram k-fold error rate: 0.487985
     labels = [-1, 1]
     # covert >1 to 1
     new_data = np.array(unigram_training_feature.data)
@@ -228,9 +228,9 @@ def main():
     new_test_labels[np.where(new_test_labels==0)[0]] = -1
 
     #---------------------- perceptron ----------------------#
-    # test_perceptron(training_corpus, new_training_labels, test_corpus, new_test_labels)
+    test_perceptron(training_corpus, new_training_labels, test_corpus, new_test_labels)
     #---------------------- naive bayes ----------------------#
-    test_naive_bayes(training_corpus, new_training_labels)
+    # test_naive_bayes(training_corpus, new_training_labels)
     
     end = datetime.now()
     used_time = (end - start).seconds
