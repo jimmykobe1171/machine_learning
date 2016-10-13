@@ -188,7 +188,7 @@ def test_perceptron(training_corpus, training_labels, test_corpus, test_labels):
     # print 'error_rate: ', error_rate
     #  k-fold error rate: 
     error_rate = k_fold_perceptron_training(bigram_training_feature, training_labels)
-    print 'error_rate: ', error_rate
+    print 'bigram error_rate: ', error_rate
     
     # tfidf variant k-fold error rate: 0.12583
     # tfidf_variant_training_feature = generate_tfidf_variant_training_feature(unigram_training_feature)
